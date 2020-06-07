@@ -1,0 +1,31 @@
+.logo {
+  position: relative;
+  z-index: 1;
+
+  img{
+    display: block;
+    width: 100%;
+  }
+
+}
+@media (min-width: $phone-landscape) {
+  .logo {
+
+  }
+}
+@media (min-width: $tablet-portrait) {
+  .logo {
+
+  }
+}
+@media (min-width: $tablet-landscape) {
+  .logo {
+
+  }
+}
+@media (min-width: $desktop) {
+  .logo {
+
+  }
+}
+

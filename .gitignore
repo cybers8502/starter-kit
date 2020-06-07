@@ -1,0 +1,12 @@
+.idea/
+node_modules/
+.DS_Store
+package-lock.json
+
+wp-content/uploads/
+.htaccess
+wp-config.php
+
+dist/wp-content/uploads/
+dist/.htaccess
+dist/wp-config.php

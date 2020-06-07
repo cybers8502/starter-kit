@@ -1,0 +1,53 @@
+.site{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  min-width: 320px;
+  min-height: 100%;
+  overflow: hidden;
+
+  & > * {
+    width: 100%;
+    padding: 0 25px;
+  }
+
+  &__header{
+
+    &-layout{
+      display: flex;
+    }
+
+  }
+
+  &__content{
+
+  }
+
+  &__footer{
+
+  }
+
+}
+@media (min-width: $phone-landscape) {
+  .site{
+
+  }
+}
+@media (min-width: $tablet-portrait) {
+  .site{
+
+  }
+}
+@media (min-width: $tablet-landscape) {
+  .site{
+
+  }
+}
+@media (min-width: $desktop) {
+  .site{
+
+  }
+}
+

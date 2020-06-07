@@ -1,0 +1,86 @@
+$block-width: 32px;
+$block-height: 16px;
+$line-height: 2px;
+
+#hamburger {
+  position: relative;
+  display: block;
+  width: $block-width;
+  height: $block-height;
+  transition: width .3s ease;
+  z-index: 3;
+
+  span,
+  span:before,
+  span:after{
+    display: block;
+    position: absolute;
+    width: inherit;
+    border: none;
+    padding: 0;
+    background-color: $hamburger;
+    transition: transform .3s ease;
+    transform: translateZ(0);
+  }
+
+  span {
+    top: 0;
+    height: $line-height;
+
+    &:before,
+    &:after {
+      content: '';
+      height: inherit;;
+    }
+
+    &:before {
+      top: $block-height/2-$line-height/2;
+      transition-property: transform, opacity;
+    }
+
+    &:after {
+      top: $block-height - $line-height;
+    }
+
+  }
+
+  &.is-active{
+
+    span{
+      transform: translate3d(0,$block-height/2,0) rotate(45deg);
+
+      &:before{
+        transform: rotate(-45deg) translate3d(($block-height/2-$line-height/2)*-1,($block-height/2-$line-height/2)*-1,0);
+        opacity: 0;
+      }
+
+      &:after{
+        transform: translate3d(0,($block-height - $line-height)*-1,0) rotate(-90deg);
+      }
+
+    }
+
+  }
+
+}
+@media (min-width: $phone-landscape) {
+  #hamburger {
+
+  }
+}
+@media (min-width: $tablet-portrait) {
+  #hamburger {
+
+  }
+}
+@media (min-width: $tablet-landscape) {
+  #hamburger {
+    display: none;
+
+  }
+}
+@media (min-width: $desktop) {
+  #hamburger {
+
+  }
+}

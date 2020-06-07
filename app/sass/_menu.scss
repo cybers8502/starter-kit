@@ -1,0 +1,40 @@
+.menu {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s ease;
+
+  &.is-show{
+    opacity: 1;
+    visibility: visible;
+  }
+
+}
+@media (min-width: $phone-landscape) {
+  .menu {
+
+  }
+}
+@media (min-width: $tablet-portrait) {
+  .menu {
+
+  }
+}
+@media (min-width: $tablet-landscape) {
+  .menu {
+
+  }
+}
+@media (min-width: $desktop) {
+  .menu {
+
+    a{
+
+      &:hover{
+
+      }
+
+    }
+
+  }
+}
+

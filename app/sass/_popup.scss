@@ -1,0 +1,144 @@
+$background-back: rgba(0,0,0,.9);
+
+.popup {
+  display: block;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 10000;
+  background-color: $background-back;
+  opacity: 0;
+  transition: opacity .5s ease-in-out;
+
+  &_opened {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+  }
+
+  &_hide {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    overflow-y: hidden;
+  }
+
+  &__wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    padding: 20px;
+    z-index: 2;
+  }
+
+  &__content {
+    display: none;
+    position: relative;
+
+    & > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .preload__wrap{
+      position: absolute;
+      z-index: 1;
+    }
+
+  }
+
+  &__close {
+    position: absolute;
+    top: -20px;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    text-indent: -5000px;
+    cursor: pointer;
+    transition: opacity .3s ease;
+
+    &:after,
+    &:before {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #fff;
+      transform-origin: center;
+      content: '';
+    }
+
+    &:after{
+      transform: translateY( 50% ) rotate( 45deg );
+    }
+
+    &:before {
+      transform: translateY( 50% ) rotate( -45deg );
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      background-position: 0 bottom;
+    }
+
+    &.hide{
+      opacity: 0;
+    }
+
+  }
+
+  &__scrollbar-measure {
+    overflow: scroll;
+    position: absolute;
+    top: -9999px;
+    width: 100px;
+    height: 100px;
+  }
+
+}
+@media (min-width: $phone-landscape) {
+  .popup {
+
+  }
+}
+@media (min-width: $tablet-portrait) {
+  .popup {
+
+  }
+}
+@media (min-width: $tablet-landscape) {
+  .popup {
+
+  }
+}
+@media (min-width: $desktop) {
+  .popup {
+
+    &__close {
+
+      &:after,
+      &:before {
+        transition: background-color .3s ease;
+      }
+
+      &:hover{
+
+        &:after,
+        &:before {
+          background-color: #26d1b0;
+        }
+
+      }
+
+    }
+
+  }
+}
