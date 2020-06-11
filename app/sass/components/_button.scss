@@ -1,0 +1,66 @@
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the button component.
+// -----------------------------------------------------------------------------
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  padding: 0 10px;
+  border: none;
+  text-align: center;
+
+  span{
+    width: 100%;
+    text-align: center;
+  }
+
+  &--color{
+
+    &-1{
+      background-color: #fff;
+      color: #fff;
+      transition: background-color .3s ease;
+
+      &:active {
+        background-color: #000;
+      }
+
+    }
+
+  }
+
+}
+@media (min-width: $phone-landscape) {
+  .btn {
+
+  }
+}
+@media (min-width: $tablet-portrait) {
+  .btn {
+
+  }
+}
+@media (min-width: $tablet-laptop) {
+  .btn {
+
+  }
+}
+@media (min-width: $desktop) {
+  .btn {
+
+    &--color{
+
+      &-1{
+
+        &:hover {
+          background-color: #000;
+        }
+
+      }
+
+    }
+
+  }
+}

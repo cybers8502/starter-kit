@@ -1,0 +1,75 @@
+/**
+ * Basic typography style for copy text with class .article
+ */
+.article {
+  font-family: sans-serif;
+
+  p,
+  h1, h2, h3{
+    font-size: 18px;
+    line-height: 27px;
+  }
+
+  h1, h2, h3{
+    margin-bottom: 20px;
+    @include myriadpro-regular;
+  }
+
+  p{
+
+    &:not(:last-of-type){
+      margin-bottom: 27px;
+    }
+
+  }
+
+  a{
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  i{
+    @include myriadpro-regular;
+  }
+
+  b, strong{
+    @include myriadpro-regular;
+  }
+
+  img{
+    display: block;
+    width: 100%;
+  }
+
+  iframe{
+    display: block;
+    width: 100%;
+    border: none;
+  }
+
+}
+@media (min-width: $phone-landscape) {
+  .article {
+
+  }
+}
+@media (min-width: $tablet-portrait) {
+  .article {
+
+  }
+}
+@media (min-width: $tablet-laptop) {
+  .article {
+
+    a:hover{
+      text-decoration: none;
+    }
+
+  }
+}
+@media (min-width: $desktop) {
+  .article {
+
+  }
+}
+

@@ -66,8 +66,8 @@ function views() {
 function scripts(done) {
     for ( let i = 0; i < paths.scripts.length; i++ ) {
         gulp.src( paths.scripts[i].contains, { sourcemaps: true } )
-            .pipe(babel())
             .pipe(sourcemaps.init())
+            .pipe(babel())
             .pipe(uglify())
             .pipe(concat(paths.scripts[i].name))
             .pipe(rename({ extname: '.min.js' }))

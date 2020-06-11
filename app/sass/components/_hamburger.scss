@@ -2,7 +2,7 @@ $block-width: 32px;
 $block-height: 16px;
 $line-height: 2px;
 
-#hamburger {
+.hamburger {
   position: relative;
   display: block;
   width: $block-width;
@@ -64,23 +64,23 @@ $line-height: 2px;
 
 }
 @media (min-width: $phone-landscape) {
-  #hamburger {
+  .hamburger {
 
   }
 }
 @media (min-width: $tablet-portrait) {
-  #hamburger {
+  .hamburger {
 
   }
 }
-@media (min-width: $tablet-landscape) {
-  #hamburger {
+@media (min-width: $tablet-laptop) {
+  .hamburger {
     display: none;
 
   }
 }
 @media (min-width: $desktop) {
-  #hamburger {
+  .hamburger {
 
   }
 }

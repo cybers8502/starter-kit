@@ -1,9 +1,9 @@
-.nice-checkbox {
+.nice-radio {
   display: inline-block;
   vertical-align: top;
   user-select: none;
 
-  input[ type = checkbox ] {
+  input[type=radio] {
     position: absolute;
     clip: rect(0, 0, 0, 0);
 
@@ -23,20 +23,21 @@
   }
 
   span {
-    position: relative;
     display: flex;
-    text-align: left;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    position: relative;
     height: 20px;
     padding-left: 25px;
     color: #000;
+    text-align: left;
     cursor: pointer;
 
     &:after,
     &:before {
       position: absolute;
+      border-radius: 50%;
       content: '';
     }
 
@@ -52,7 +53,6 @@
       display: none;
       top: 7px;
       left: 7px;
-      border-radius: 50%;
       background-color: #000;
       width: 5px;
       height: 5px;
@@ -63,22 +63,22 @@
 
 }
 @media (min-width: $phone-landscape) {
-  .nice-checkbox {
+  .nice-radio {
 
   }
 }
 @media (min-width: $tablet-portrait) {
-  .nice-checkbox {
+  .nice-radio {
 
   }
 }
-@media (min-width: $tablet-landscape) {
-  .nice-checkbox {
+@media (min-width: $tablet-laptop) {
+  .nice-radio {
 
   }
 }
 @media (min-width: $desktop) {
-  .nice-checkbox {
+  .nice-radio {
 
   }
 }

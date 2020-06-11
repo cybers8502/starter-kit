@@ -1,15 +1,36 @@
-@import "main";
-@import "reset";
+@charset "UTF-8";
+// 1. Configuration and helpers
+@import
+'./abstracts/abstracts';
 
-@import "fonts/myriadpro-regular";
+// 2. Vendors
+@import
+'./vendors/reset';
 
-@import "site";
-@import "logo";
-@import "hamburger";
-@import "menu";
+// 3. Base stuff
+@import
+'./base/base',
+'./base/fonts',
+'./base/typography',
+'./base/helpers',
+'./base/animations';
 
-@import "animations";
-@import "btn";
-@import "article";
+// 4. Layout-related sections
+@import
+'./layout/logo',
+'./layout/menu',
+'./layout/site-header',
+'./layout/site-footer',
+'./layout/popup',
+'./layout/popup-exp';
 
-@import "page-404";
+// 5. Components
+@import
+'./components/button',
+'./components/hamburger',
+'./components/nice-checkbox';
+'./components/nice-radio';
+
+// 6. Page-specific styles
+@import
+'./pages/page-404';
