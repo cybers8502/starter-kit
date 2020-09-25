@@ -4,9 +4,17 @@ node_modules/
 package-lock.json
 
 wp-content/uploads/
+wp-content/themes/twentytwenty/
+wp-content/themes/twentynineteen/
+wp-content/themes/twentyseventeen/
+wp-content/themes/*/assets
 .htaccess
 wp-config.php
 
 dist/wp-content/uploads/
+dist/wp-content/themes/twentytwenty/
+dist/wp-content/themes/twentynineteen/
+dist/wp-content/themes/twentyseventeen/
+dist/wp-content/themes/*/assets
 dist/.htaccess
 dist/wp-config.php
