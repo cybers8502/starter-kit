@@ -1,7 +1,7 @@
 'use strict'
 
 let gulp                = require('gulp');
-let gulpif              = require('gulp-if')
+let gulpif              = require('gulp-if');
 let webpack             = require('webpack');
 let webpackstream       = require('webpack-stream');
 let postcss             = require('gulp-postcss');
