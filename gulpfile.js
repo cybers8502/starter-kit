@@ -1,42 +1,43 @@
+'use strict'
+
 let gulp                = require('gulp');
-let sass                = require('gulp-sass');
-let babel               = require('gulp-babel');
-let concat              = require('gulp-concat');
-let uglify              = require('gulp-uglify');
+let gulpif              = require('gulp-if');
+let webpack             = require('webpack');
+let webpackstream       = require('webpack-stream');
 let autoprefixer        = require('gulp-autoprefixer');
-let rename              = require('gulp-rename');
+let sass                = require('gulp-sass');
 let cleanCSS            = require('gulp-clean-css');
 let browserSync         = require('browser-sync');
 let sourcemaps          = require('gulp-sourcemaps');
 let posthtml            = require('gulp-posthtml');
 let posthtmlInclude     = require('posthtml-include');
 let posthtmlEach        = require('posthtml-each');
+let imagemin            = require("gulp-imagemin");
+let svgstore            = require("gulp-svgstore");
 let del                 = require('del');
+let TerserPlugin        = require('terser-webpack-plugin');
 
 const destPath = `assets/`;
 
 const paths = {
-    views: 'app/*.html',
-    include: 'app/include/**/*.html',
-    styles: 'app/sass/**/*.scss',
-    vendorStyles: 'app/css/**/*.css',
-    watchScripts: 'app/js/**/*.js',
-    scripts: [
-        {
-            name: 'index',
-            contains: [
-                'app/js/jquery.index.js',
-                'app/js/jquery.main.js',
-            ]
-        }
-    ],
-    vendorScripts: 'app/js/vendors/**/*.js',
-    images: 'app/img/**/*',
-    pictures: 'app/pic/**/*',
-    fonts: 'app/fonts/**/*',
-    php: 'app/php/**/*',
-    favicon: 'app/favicon/**/*'
+    views: `app/*.html`,
+    include: `app/include/**/*.html`,
+    styles: `app/css/*.scss`,
+    watchScripts: `app/js/**/*.js`,
+    vendorStyles: `app/js/**/*.css`,
+    scripts: {
+        'index': [
+            `./app/js/jquery.main.js`,
+        ]
+    },
+    vendorScripts: `app/js/vendors/**/*.js`,
+    images: `app/img/**/*`,
+    pictures: `app/pic/**/*`,
+    svg: `app/svg/**/*.svg`,
+    files: ['fonts', 'php', 'favicon']
 };
+
+let env = process.env.NODE_ENV
 
 function clean() {
     return del([ destPath ])
@@ -55,7 +56,8 @@ function browserSyncInit(done) {
 }
 
 function views() {
-    return gulp.src(paths.views)
+    return gulp
+        .src(paths.views)
         .pipe(posthtml([
             posthtmlInclude({ root: 'app/' }),
             posthtmlEach()
@@ -63,31 +65,60 @@ function views() {
         .pipe(gulp.dest(destPath));
 }
 
-function scripts(done) {
-    for ( let i = 0; i < paths.scripts.length; i++ ) {
-        gulp.src( paths.scripts[i].contains, { sourcemaps: true } )
-            .pipe(sourcemaps.init())
-            .pipe(babel())
-            .pipe(uglify())
-            .pipe(concat(paths.scripts[i].name))
-            .pipe(rename({ extname: '.min.js' }))
-            .pipe(sourcemaps.write('./maps'))
-            .pipe(gulp.dest(`${ destPath }/js/`))
-            .pipe(browserSync.stream())
-    }
-    done();
+function scripts() {
+    return gulp
+        .src(paths.watchScripts)
+        .pipe(webpackstream({
+            mode: process.env.NODE_ENV,
+            entry: paths.scripts,
+            output: {
+                filename: '[name].min.js'
+            },
+            resolve: {
+                extensions: ['.js','.jsx','.css'],
+                modules: [
+                    './node_modules',
+                    './app/js/vendors'
+                ],
+            },
+            module: {
+                rules: [
+                    {
+                        test: /(\.css$)/,
+                        loaders: ['style-loader', 'css-loader', 'postcss-loader']
+                    },
+                    {
+                        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                        loader: 'url-loader?limit=100000'
+                    }
+                ]
+            },
+            optimization: {
+                minimizer: [
+                    new TerserPlugin({
+                        cache: true,
+                        parallel: true,
+                        sourceMap: true
+                    }),
+                ],
+            },
+        }, webpack))
+        .pipe(gulp.dest(`${ destPath }/js/`))
+        .pipe(browserSync.stream())
 }
 
 function styles() {
     return gulp.src(paths.styles)
-        .pipe(sourcemaps.init())
-        .pipe(sass({outputStyle: 'compressed'})
+        .pipe(gulpif(env === 'production', sourcemaps.init()))
+        .pipe(gulpif(env === 'production', sass({outputStyle: 'compressed'}))
+            .on('error', sass.logError))
+        .pipe(gulpif(env === 'development', sass())
             .on('error', sass.logError))
         .pipe(autoprefixer({
             cascade: false
         }))
         .pipe(cleanCSS())
-        .pipe(sourcemaps.write('./maps'))
+        .pipe(gulpif(env === 'production',sourcemaps.write('./maps')))
         .pipe(gulp.dest(`${ destPath }/css`))
 }
 
@@ -103,29 +134,29 @@ function vendorStyles() {
 
 function images() {
     return gulp.src(paths.images)
-        // .pipe( imagemin( {optimizationLevel: 5} ) )
+        .pipe(gulpif(env === 'production', imagemin( {optimizationLevel: 5} )))
         .pipe( gulp.dest(`${ destPath }/img`) );
 }
 
 function pictures() {
     return gulp.src(paths.pictures)
-        // .pipe( imagemin( {optimizationLevel: 5} ) )
+        .pipe(gulpif(env === 'production', imagemin( {optimizationLevel: 5} )))
         .pipe( gulp.dest(`${ destPath }/pic`) );
 }
 
-function fonts() {
-    return gulp.src(paths.fonts)
-        .pipe(gulp.dest(`${ destPath }/fonts`));
+function svg() {
+    return gulp.src("src/svg/*.svg")
+        .pipe(svgstore())
+        .pipe(gulp.dest(`${ destPath }/svg`))
 }
 
-function php() {
-    return gulp.src(paths.php)
-        .pipe(gulp.dest(`${ destPath }/php`));
-}
-
-function favicon() {
-    return gulp.src(paths.favicon)
-        .pipe(gulp.dest(`${ destPath }/favicon`));
+function files(done) {
+    for ( let i = 0; i < paths.files.length; i++ ) {
+        let src = paths.files[i];
+        gulp.src(`app/${src}/**/*`)
+            .pipe(gulp.dest(`${ destPath }/${src}`));
+    }
+    done();
 }
 
 function watch() {
@@ -136,10 +167,16 @@ function watch() {
     gulp.watch(paths.vendorStyles,  vendorStyles);
     gulp.watch(paths.images,        images);
     gulp.watch(paths.pictures,      pictures);
-    gulp.watch(paths.php,           php);
+    gulp.watch(paths.svg,           svg);
+    gulp.watch(paths.files,         files);
 }
 
-const build = gulp.series(clean, gulp.parallel(views, scripts, styles, vendorScripts, vendorStyles, images, pictures, fonts, php, favicon), browserSyncInit, watch);
+const build = gulp.series(clean,
+    gulp.parallel(views, scripts, styles, vendorScripts, vendorStyles, images, pictures, svg, files),
+    browserSyncInit, watch);
+
+const prod = gulp.series(clean,
+    gulp.parallel(views, scripts, styles, vendorScripts, images, pictures, svg, files) );
 
 exports.clean = clean;
 exports.views = views;
@@ -149,10 +186,10 @@ exports.vendorScripts = vendorScripts;
 exports.vendorStyles = vendorStyles;
 exports.images = images;
 exports.pictures = pictures;
-exports.fonts = fonts;
-exports.php = php;
-exports.favicon = favicon;
+exports.svg = svg;
+exports.files = files;
 exports.watch = watch;
 exports.build = build;
 
 exports.default = build;
+exports.prod = prod;
