@@ -1,4 +1,7 @@
+'use strict'
+
 let gulp                = require('gulp');
+let gulpif              = require('gulp-if')
 let webpack             = require('webpack');
 let webpackstream       = require('webpack-stream');
 let postcss             = require('gulp-postcss');
@@ -35,6 +38,8 @@ const paths = {
     files: ['fonts', 'php', 'favicon']
 };
 
+let env = process.env.NODE_ENV
+
 function clean() {
     return del([ destPath ])
 }
@@ -65,7 +70,7 @@ function scripts() {
     return gulp
         .src(paths.watchScripts)
         .pipe(webpackstream({
-            mode: 'production',
+            mode: process.env.NODE_ENV,
             entry: paths.scripts,
             output: {
                 filename: '[name].min.js'
@@ -104,28 +109,21 @@ function scripts() {
 }
 
 function styles() {
-    return gulp
-        .src(paths.styles)
-        .pipe(postcss([
-            tailwindcss('./tailwind.config.js'),
-            autoprefixer({
-                cascade: false
-            }),
-        ]))
-        .pipe(rename({ extname: '.min.css' }))
-        .pipe(gulp.dest(`${ destPath }/css`))
-}
 
-function stylesProd() {
+    let plugins = [
+        tailwindcss('./tailwind.config.js'),
+        autoprefixer({
+            cascade: false
+        }),
+    ]
+
+    if ( env === 'production' ){
+        plugins.push( cssnano() )
+    }
+
     return gulp
         .src(paths.styles)
-        .pipe(postcss([
-            tailwindcss('./tailwind.config.js'),
-            autoprefixer({
-                cascade: false
-            }),
-            cssnano()
-        ]))
+        .pipe(postcss(plugins))
         .pipe(rename({ extname: '.min.css' }))
         .pipe(gulp.dest(`${ destPath }/css`))
 }
@@ -139,25 +137,14 @@ function vendorScripts() {
 function images() {
     return gulp
         .src(paths.images)
-        .pipe( gulp.dest(`${ destPath }/img`) );
-}
-
-function imagesProd() {
-    return gulp
-        .src(paths.images)
+        .pipe(gulpif(env === 'production', imagemin( {optimizationLevel: 5} )))
         .pipe( gulp.dest(`${ destPath }/img`) );
 }
 
 function pictures() {
     return gulp
         .src(paths.pictures)
-        .pipe( gulp.dest(`${ destPath }/pic`) );
-}
-
-function picturesProd() {
-    return gulp
-        .src(paths.pictures)
-        .pipe( imagemin( {optimizationLevel: 5} ) )
+        .pipe(gulpif(env === 'production', imagemin( {optimizationLevel: 5} )))
         .pipe( gulp.dest(`${ destPath }/pic`) );
 }
 
@@ -191,7 +178,7 @@ const build = gulp.series(clean,
     gulp.parallel(views, scripts, styles, vendorScripts, images, pictures, svg, files), browserSyncInit, watch);
 
 const prod = gulp.series(clean,
-    gulp.parallel(views, scripts, stylesProd, vendorScripts, imagesProd, picturesProd, svg, files) );
+    gulp.parallel(views, scripts, styles, vendorScripts, images, pictures, svg, files) );
 
 exports.clean = clean;
 exports.views = views;
