@@ -5,6 +5,7 @@ let gulpif              = require('gulp-if');
 let webpack             = require('webpack');
 let webpackstream       = require('webpack-stream');
 let postcss             = require('gulp-postcss');
+let postcssImport       = require('postcss-import');
 let autoprefixer        = require('autoprefixer');
 let cssnano             = require('cssnano');
 let tailwindcss         = require('tailwindcss');
@@ -18,23 +19,22 @@ let browserSync         = require('browser-sync');
 let del                 = require('del');
 let TerserPlugin        = require('terser-webpack-plugin');
 
-const app = `app`;
 const destPath = `assets/`;
 
 const paths = {
-    views: `${app}/*.html`,
-    include: `${app}/include/**/*.html`,
-    styles: `${app}/css/*.css`,
-    watchScripts: `${app}/js/**/*.js`,
+    views: `app/*.html`,
+    include: `app/include/**/*.html`,
+    styles: `app/css/*.pcss`,
+    watchScripts: `app/js/**/*.js`,
     scripts: {
         'index': [
-            `./${app}/js/js.main.js`,
+            `./app/js/js.main.js`,
         ]
     },
-    vendorScripts: `${app}/js/vendors/**/*.js`,
-    images: `${app}/img/**/*`,
-    pictures: `${app}/pic/**/*`,
-    svg: `${app}/svg/**/*.svg`,
+    vendorScripts: `app/js/vendors/**/*.js`,
+    images: `app/img/**/*`,
+    pictures: `app/pic/**/*`,
+    svg: `app/svg/**/*.svg`,
     files: ['fonts', 'php', 'favicon']
 };
 
@@ -111,6 +111,7 @@ function scripts() {
 function styles() {
 
     let plugins = [
+        postcssImport,
         tailwindcss('./tailwind.config.js'),
         autoprefixer({
             cascade: false
@@ -157,7 +158,7 @@ function svg() {
 function files(done) {
     for ( let i = 0; i < paths.files.length; i++ ) {
         let src = paths.files[i];
-        gulp.src(`${app}/${src}/**/*`)
+        gulp.src(`app/${src}/**/*`)
             .pipe(gulp.dest(`${ destPath }/${src}`));
     }
     done();
