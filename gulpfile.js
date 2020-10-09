@@ -40,7 +40,7 @@ const paths = {
 let env = process.env.NODE_ENV
 
 function clean() {
-    return del([ destPath ])
+    return del([ destPath ], {force: true})
 }
 
 function browserSyncInit(done) {
