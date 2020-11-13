@@ -24,6 +24,7 @@ const destPath = `assets/`;
 const paths = {
     views: `app/*.html`,
     include: `app/include/**/*.html`,
+    tailwind: [`tailwind.config.js`],
     styles: `app/css/*.pcss`,
     watchScripts: `app/js/**/*.js`,
     scripts: {
@@ -41,7 +42,7 @@ const paths = {
 let env = process.env.NODE_ENV
 
 function clean() {
-    return del([ destPath ])
+    return del([ destPath ], {force: true})
 }
 
 function browserSyncInit(done) {
@@ -125,7 +126,7 @@ function styles() {
     return gulp
         .src(paths.styles)
         .pipe(postcss(plugins))
-        .pipe(rename({ extname: '.min.css' }))
+        .pipe(rename({ extname: '.css' }))
         .pipe(gulp.dest(`${ destPath }/css`))
 }
 
@@ -167,7 +168,7 @@ function files(done) {
 function watch() {
     gulp.watch([paths.views, paths.include], views);
     gulp.watch(paths.watchScripts,  scripts);
-    gulp.watch(paths.styles,        styles);
+    gulp.watch([paths.styles, ...paths.tailwind], styles);
     gulp.watch(paths.vendorScripts, vendorScripts);
     gulp.watch(paths.images,        images);
     gulp.watch(paths.pictures,      pictures);
