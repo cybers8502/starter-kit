@@ -18,3 +18,5 @@ dist/wp-content/themes/twentyseventeen/
 dist/wp-content/themes/*/assets
 dist/.htaccess
 dist/wp-config.php
+
+assets/
